@@ -6,7 +6,7 @@ import Axios from 'axios';
 
 class App extends Component {
   state = {
-    user: [],
+    users: [],
     loading: false
   };
 
