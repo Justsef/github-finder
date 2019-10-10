@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import NavBar from './components/layout/NavBar';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
+import About from './components/pages/About';
 import './App.css';
 import Axios from 'axios';
 
@@ -12,24 +14,6 @@ class App extends Component {
     loading: false,
     alert: null
   };
-
-  //async componentDidMount() {
-  //  this.setState({ loading: true });
-
-  //  const res = await Axios.get(
-  //    `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-  //   );
-
-  //  this.setState({
-  //    users: res.data,
-  //    loading: false
-  //  });
-  // }
-  /*componentDidMount() {
-    axios.get('https://api.github.com/users').then(res =>
-      console.log(res.data)
-    );
-  }*/
 
   //search github users
   searchUsers = async text => {
@@ -56,21 +40,52 @@ class App extends Component {
   render() {
     const { users, loading } = this.state;
     return (
-      <div className='App'>
-        <NavBar />
-        <div className='container'>
-          <Alert alert={this.state.alert} />
-          <Search
-            searchUsers={this.searchUsers}
-            clearUsers={this.clearUsers}
-            showClear={users.length > 0 ? true : false}
-            setAlert={this.setAlert}
-          />
-          <Users loading={loading} users={this.state.users} />
+      <Router>
+        <div className='App'>
+          <NavBar />
+          <div className='container'>
+            <Alert alert={this.state.alert} />
+            <Switch>
+              <Route
+                exact
+                path='/'
+                render={props => (
+                  <Fragment>
+                    <Search
+                      searchUsers={this.searchUsers}
+                      clearUsers={this.clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      setAlert={this.setAlert}
+                    />
+                    <Users loading={loading} users={this.state.users} />
+                  </Fragment>
+                )}
+              />
+              <Route exact path='/about' component={About} />
+            </Switch>
+          </div>
         </div>
-      </div>
+      </Router>
     );
   }
 }
 
 export default App;
+
+//async componentDidMount() {
+//  this.setState({ loading: true });
+
+//  const res = await Axios.get(
+//    `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+//   );
+
+//  this.setState({
+//    users: res.data,
+//    loading: false
+//  });
+// }
+/*componentDidMount() {
+    axios.get('https://api.github.com/users').then(res =>
+      console.log(res.data)
+    );
+  }*/
